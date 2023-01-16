@@ -11,6 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bullmq": "^3.5.6"
+    "bullmq": ">=3 <4"
   }
 }
