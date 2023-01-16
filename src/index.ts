@@ -27,7 +27,7 @@ export async function latency(names: string[], options: Partial<LatencyOptions> 
     const requests = queues.map(queue => queue.getJobs(["wait"], 0, 0, !opts.lifo))
 
     try {
-        const responses = await Promise.all(queueRequests)
+        const responses = await Promise.all(requests)
         const start = Date.now()
         let oldest = start
 
