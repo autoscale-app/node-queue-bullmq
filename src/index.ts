@@ -33,8 +33,19 @@ export async function latency (names: string[], options: Partial<LatencyOptions>
 
     for (const queue of responses) {
       for (const job of queue) {
-        if (job.timestamp < oldest) {
-          oldest = job.timestamp
+        let jobStart
+
+        if (job.processedOn) {
+          // can't figure out a way to easily acquire the jobStart
+          // after a failed attempt. While not ideal, leaving it on job.processedOn
+          // for now to ensure latency increases.
+          jobStart = job.processedOn // + await backoffDuration(job)
+        } else {
+          jobStart = job.timestamp + job.delay
+        }
+
+        if (jobStart < oldest) {
+          oldest = jobStart
         }
       }
     }
@@ -51,3 +62,13 @@ export async function latency (names: string[], options: Partial<LatencyOptions>
     }
   }
 }
+
+// Inadequate -- can't figure out custom backoff
+// async function backoffDuration (job: Job): Promise<number> {
+//   if (typeof job.opts.backoff === "number") {
+//     return job.opts.backoff
+//   } else if (job.opts.backoff != null) {
+//     return Backoffs.calculate(job.opts.backoff, job.attemptsMade, new Error(), job)
+//   }
+//   return 0
+// }
