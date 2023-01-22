@@ -1,68 +1,32 @@
-@TODO rewrite for BullMQ
+# Autoscale.app Node Queue (BullMQ)
 
-# Autoscale.app Node Agent
-
-Node library that provides Autoscale.app with metrics required for autoscaling.
+Node library that calculates [BullMQ] queue metrics for the [Autoscale.app] Agent.
 
 ## Installation
 
 Add the package to your package.json:
 
-    npm install @autoscale/agent
+    npm install @autoscale/queue-bullmq
 
 ## Usage
 
-This library is designed to be used as either a stand-alone library to dispatch metrics to the Autoscale.app metric servers, or as the foundation to easily build middleware for any Node web frameworks such as Express and Koa.
+The following `latency` function can be used to determine the latency of the specified queue.
 
-### Middleware
-
-For middleware examples, see the following packages:
-
-| Web Framework | Repository                                          |
-|---------------|-----------------------------------------------------|
-| Express       | https://github.com/autoscale-app/node-agent-express |
-| Koa           | https://github.com/autoscale-app/node-agent-koa     |
-
-In most cases you'll be using node-agent through one of the middleware packages.
-
-The middleware approach is suitable for both web and worker autoscaling.
-
-### Stand-alone
-
-The following example demonstrates how to report ([BullMQ](https://github.com/taskforcesh/bullmq)) queue latency for the default queue.
+The return value of `latency` (number or null) is used in conjunction with one of the [Agent] middleware libraries to make metrics available to [Autoscale.app].
 
 ```ts
-import { Agent } from "@autoscale/agent"
 import { latency } from "@autoscale/queue-bullmq"
 
-const PLATFORM = "render"
-const WORKER = process.env("WORKER_METRIC_TOKEN")
+const OPTIONS = {
+  lifo: false,
+  connection: {
+    host: '127.0.0.1',
+    port: 6379
+  }
+}
 
-new Agent(PLATFORM).dispatch(WORKER, () => latency(["default"]))
+await latency(["default"], OPTIONS) // => number | null
 ```
-
-This will periodically call the latency function and dispatch (report) the result in the background.
-
-The stand-alone approach is only suitable for worker autoscaling.
-
-## Related Packages
-
-The following packages are currently available.
-
-#### Agents (Web Framework Middleware)
-
-| Web Framework | Repository                                          |
-|---------------|-----------------------------------------------------|
-| Express       | https://github.com/autoscale-app/node-agent-express |
-| Koa           | https://github.com/autoscale-app/node-agent-koa     |
-
-#### Queues (Worker Library Helpers)
-
-| Worker Library | Repository                                         |
-|----------------|----------------------------------------------------|
-| BullMQ         | https://github.com/autoscale-app/node-queue-bullmq |
-
-Get in touch if your preferred integration isn't available and we'll check if we can add support for it.
 
 ## Development
 
@@ -100,4 +64,8 @@ To yank a release:
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/autoscale-app/node-agent
+Bug reports and pull requests are welcome on GitHub at https://github.com/autoscale-app/node-queue-bullmq
+
+[Autoscale.app]: https://autoscale.app
+[Agent]: https://github.com/autoscale-app/node-agent
+[BullMQ]: https://github.com/taskforcesh/bullmq
