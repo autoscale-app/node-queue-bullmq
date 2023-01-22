@@ -13,17 +13,17 @@ interface RedisConnectionOptions {
 const defaultLatencyOptions: LatencyOptions = {
   lifo: false,
   connection: {
-    host: 'localhost',
+    host: '127.0.0.1',
     port: 6379
   }
 }
 
 // @example
 //   latency(["default"])
-//   latency(["default", "low", "critical"], {lifo: true})
+//   latency(["default", "low", "critical"], {lifo: true, connection: {host: '127.0.0.1', port: 6379}})
 export async function latency (names: string[], options: Partial<LatencyOptions> = {}): Promise<number | null> {
   const opts: LatencyOptions = { ...defaultLatencyOptions, ...options }
-  const queues = names.map(queue => new Queue(queue))
+  const queues = names.map(queue => new Queue(queue, { connection: opts.connection }))
 
   try {
     const requests = queues.map(async queue => await queue.getJobs(['wait'], 0, 0, !opts.lifo))
