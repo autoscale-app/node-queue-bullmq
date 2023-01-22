@@ -1,6 +1,6 @@
 # Autoscale.app Node Queue (BullMQ)
 
-Node library that calculates [BullMQ] queue metrics for the [Autoscale.app] Agent.
+Node library that calculates [BullMQ] queue metrics for use with the [Autoscale.app] Agent.
 
 ## Installation
 
@@ -10,7 +10,7 @@ Add the package to your package.json:
 
 ## Usage
 
-The following `latency` function can be used to determine the latency of the specified queue.
+The following `latency` function can be used to determine the latency of the specified queue(s) in FIFO or LIFO mode.
 
 The return value of `latency` (number or null) is used in conjunction with one of the [Agent] middleware libraries to make metrics available to [Autoscale.app].
 
@@ -27,6 +27,8 @@ const OPTIONS = {
 
 await latency(['default'], OPTIONS) // => number | null
 ```
+
+Note that only the 'wait' queue is used to measure latency. It is advised to have at least one worker running at all times, and to (auto)scale up when latency increases using [Autoscale.app].
 
 ## Development
 
