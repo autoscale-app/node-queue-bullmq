@@ -1,6 +1,6 @@
 # Autoscale.app Node Queue (BullMQ)
 
-Node library that calculates [BullMQ] queue metrics for use with the [Autoscale.app] Agent.
+Node library that calculates [BullMQ] queue metrics for use with the [Autoscale.app] [Agent].
 
 ## Installation
 
