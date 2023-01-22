@@ -15,7 +15,7 @@ The following `latency` function can be used to determine the latency of the spe
 The return value of `latency` (number or null) is used in conjunction with one of the [Agent] middleware libraries to make metrics available to [Autoscale.app].
 
 ```ts
-import { latency } from "@autoscale/queue-bullmq"
+import { latency } from '@autoscale/queue-bullmq'
 
 const OPTIONS = {
   lifo: false,
@@ -25,7 +25,7 @@ const OPTIONS = {
   }
 }
 
-await latency(["default"], OPTIONS) // => number | null
+await latency(['default'], OPTIONS) // => number | null
 ```
 
 ## Development
