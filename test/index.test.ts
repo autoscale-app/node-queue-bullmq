@@ -49,3 +49,8 @@ test("enqueued 10 in the last second", async () => {
     }
   })
 })
+
+test("null on error", async () => {
+  jest.spyOn(Date, "now").mockImplementation(() => { throw new Error() })
+  await expect(latency(["bullmq"])).resolves.toBe(null)
+})

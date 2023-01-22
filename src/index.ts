@@ -22,9 +22,10 @@ const defaultLatencyOptions: LatencyOptions = {
 //   latency(["default", "low", "critical"], {lifo: true, connection: {host: '127.0.0.1', port: 6379}})
 export async function latency (names: string[], options: Partial<LatencyOptions> = {}): Promise<number | null> {
   const opts: LatencyOptions = { ...defaultLatencyOptions, ...options }
-  const queues = names.map(queue => new Queue(queue, { connection: opts.connection }))
+  let queues
 
   try {
+    queues = names.map(queue => new Queue(queue, { connection: opts.connection }))
     const requests = queues.map(async queue => await queue.getJobs(['wait'], 0, 0, !opts.lifo))
     const responses = await Promise.all(requests)
     const start = Date.now()
@@ -43,8 +44,10 @@ export async function latency (names: string[], options: Partial<LatencyOptions>
     console.error('[@autoscale/queue-bullmq] latency error:', err)
     return null
   } finally {
-    for (const queue of queues) {
-      void queue.close()
+    if (queues != null) {
+      for (const queue of queues) {
+        void queue.close()
+      }
     }
   }
 }
