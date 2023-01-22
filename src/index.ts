@@ -18,7 +18,6 @@ const defaultLatencyOptions: LatencyOptions = {
   }
 }
 
-// @example
 //   latency(["default"])
 //   latency(["default", "low", "critical"], {lifo: true, connection: {host: '127.0.0.1', port: 6379}})
 export async function latency (names: string[], options: Partial<LatencyOptions> = {}): Promise<number | null> {
