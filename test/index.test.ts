@@ -32,7 +32,7 @@ test("just enqueued", async () => {
   await expect(latency(["bullmq"])).resolves.toBe(0)
 })
 
-test("enqueued for one second", async () => {
+test("enqueued 10 in the last second", async () => {
   for (let i = 0; i < 10; i++) {
     queue.add("bullmq", {})
   }
