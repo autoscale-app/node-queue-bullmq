@@ -36,7 +36,7 @@ export async function latency (names: string[], options: Partial<LatencyOptions>
       for (const job of queue) {
         let jobStart
 
-        if (job.processedOn) {
+        if (job.processedOn != null) {
           // Unfortunately there doesn't appear to be a way to determine when the job failed,
           // so the best we can do is use job.processedOn. It would be ideal if there was either
           // a "job.failedOn" or "job.delayedUntil" property.
