@@ -32,6 +32,18 @@ await latency(['default'], OPTIONS) // => number | null
 await latency(['email', 'sms'], OPTIONS) // => number | null
 ```
 
+When using a custom backoff strategy, you should add the same backoff strategy function to `OPTIONS`.
+
+```ts
+function someCustomBackoffStrategy (attemptsMade: number) {
+  return Math.round((Math.pow(2, attemptsMade) - 1) * 1000)
+}
+
+const OPTIONS = {
+  backoffStrategy: someCustomBackoffStrategy
+}
+```
+
 ## Development
 
 Install dependencies:
