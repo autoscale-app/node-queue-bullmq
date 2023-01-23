@@ -37,6 +37,9 @@ export async function latency (names: string[], options: Partial<LatencyOptions>
         let jobStart
 
         if (job.processedOn) {
+          // Unfortunately there doesn't appear to be a way to determine when the job failed,
+          // so the best we can do is use job.processedOn. It would be ideal if we had either
+          // "job.failedOn" or "job.delayedUntil".
           jobStart = job.processedOn + await backoffDelay(job, opts.backoffStrategy)
         } else {
           jobStart = job.timestamp + job.delay
