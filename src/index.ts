@@ -1,12 +1,5 @@
 import { Queue, Backoffs, type BackoffStrategy, type Job } from 'bullmq'
 
-// export type BackoffStrategy = (
-//   attemptsMade?: number,
-//   type?: string,
-//   err?: Error,
-//   job?: MinimalJob,
-// ) => Promise<number> | number;
-
 interface LatencyOptions {
   lifo: boolean
   connection: RedisConnectionOptions
