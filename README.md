@@ -29,7 +29,6 @@ await latency(['default'], OPTIONS) // => number | null
 ```
 
 
-
 ## Development
 
 Install dependencies:
