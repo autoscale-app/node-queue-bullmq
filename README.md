@@ -4,7 +4,7 @@ Produces [BullMQ] queue metrics for the [Autoscale.app] [Agent].
 
 ## Installation
 
-Add the package to your package.json:
+Add the package to your `package.json`:
 
     npm install @autoscale/queue-bullmq
 
