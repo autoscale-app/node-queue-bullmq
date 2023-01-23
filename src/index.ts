@@ -1,8 +1,16 @@
-import { Queue } from 'bullmq'
+import { Queue, Backoffs, type BackoffStrategy, type Job } from 'bullmq'
+
+// export type BackoffStrategy = (
+//   attemptsMade?: number,
+//   type?: string,
+//   err?: Error,
+//   job?: MinimalJob,
+// ) => Promise<number> | number;
 
 interface LatencyOptions {
   lifo: boolean
   connection: RedisConnectionOptions
+  backoffStrategy?: BackoffStrategy
 }
 
 interface RedisConnectionOptions {
@@ -36,10 +44,7 @@ export async function latency (names: string[], options: Partial<LatencyOptions>
         let jobStart
 
         if (job.processedOn) {
-          // can't figure out a way to easily acquire the jobStart
-          // after a failed attempt. While not ideal, leaving it on job.processedOn
-          // for now to ensure latency increases.
-          jobStart = job.processedOn // + await backoffDuration(job)
+          jobStart = job.processedOn + await backoffDelay(job, opts.backoffStrategy)
         } else {
           jobStart = job.timestamp + job.delay
         }
@@ -63,12 +68,11 @@ export async function latency (names: string[], options: Partial<LatencyOptions>
   }
 }
 
-// Inadequate -- can't figure out custom backoff
-// async function backoffDuration (job: Job): Promise<number> {
-//   if (typeof job.opts.backoff === "number") {
-//     return job.opts.backoff
-//   } else if (job.opts.backoff != null) {
-//     return Backoffs.calculate(job.opts.backoff, job.attemptsMade, new Error(), job)
-//   }
-//   return 0
-// }
+async function backoffDelay (job: Job, backoffStrategy?: BackoffStrategy): Promise<number> {
+  if (job.opts.backoff == null) {
+    return 0
+  }
+
+  const backoffOptions = Backoffs.normalize(job.opts.backoff)
+  return await Backoffs.calculate(backoffOptions, job.attemptsMade, new Error(), job, backoffStrategy)
+}
