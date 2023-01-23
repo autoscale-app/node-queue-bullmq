@@ -12,7 +12,7 @@ Add the package to your package.json:
 
 The following `latency` function can be used to determine the latency of the specified queue(s) in FIFO (default) or LIFO mode.
 
-The return value of `latency` (`number` or `null`) is used in conjunction with the [Agent] package to make metrics available to [Autoscale.app] for the purpose of autoscaling BullMQ worker processes.
+The return value of `latency` (`number` or `null`) is used in conjunction with the [Agent] package to make metrics available to [Autoscale.app] for the purpose of autoscaling [BullMQ] worker processes.
 
 ```ts
 import { latency } from '@autoscale/queue-bullmq'
