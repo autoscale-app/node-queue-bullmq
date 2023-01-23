@@ -1,7 +1,7 @@
 {
   "name": "@autoscale/queue-bullmq",
   "version": "0.1.0",
-  "description": "Node package that calculates BullMQ queue metrics for use with the Autoscale.app Agent.",
+  "description": "Package that calculates BullMQ queue metrics for use with the Autoscale.app Agent.",
   "keywords": [
     "autoscale",
     "queue",
