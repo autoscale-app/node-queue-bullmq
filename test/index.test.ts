@@ -1,4 +1,5 @@
-import { setup, sleep } from "./helpers"
+// import { setup, sleep } from "./helpers"
+import { setup } from "./helpers"
 import { latency } from "../src/index"
 import { Queue } from "bullmq"
 
@@ -38,50 +39,32 @@ test("empty", async () => {
   await expect(latency(["bullmq"], OPTIONS)).resolves.toBe(0)
 })
 
-test("just enqueued", async () => {
+test("just enqueued in FIFO", async () => {
   await queue.add("bullmq", {})
   await expect(queue.count()).resolves.toBe(1)
   await expect(latency(["bullmq"], OPTIONS)).resolves.toBe(0)
 })
 
-test("enqueued 6 in FIFO mode in the last 3 seconds", async () => {
-  for (let i = 0; i < 6; i++) {
-    setTimeout(() => {
-      queue.add("bullmq", {})
-    }, 500 * i)
-  }
-
-  return new Promise(async (resolve, reject) => {
-    await sleep(3000)
-
-    try {
-      await expect(queue.count()).resolves.toBe(6)
-      await expect(latency(["bullmq"], OPTIONS)).resolves.toBe(3)
-      resolve(null)
-    } catch (err) {
-      reject(err)
-    }
-  })
+test("just enqueued in LIFO", async () => {
+  await queue.add("bullmq", {})
+  await expect(queue.count()).resolves.toBe(1)
+  await expect(latency(["bullmq"], LIFO_OPTIONS)).resolves.toBe(0)
 })
 
-test("enqueued 6 in LIFO mode in the last 3 seconds", async () => {
-  for (let i = 0; i < 6; i++) {
-    setTimeout(() => {
-      queue.add("bullmq", {})
-    }, 500 * i)
+test("enqueued 3 in FIFO mode in the last 3 seconds", async () => {
+  for (let i = 3; i > 0; i--) {
+    await queue.add("bullmq", {}, { timestamp: Date.now() - (1000 * i) })
   }
+  await expect(queue.count()).resolves.toBe(3)
+  await expect(latency(["bullmq"], OPTIONS)).resolves.toBe(3)
+})
 
-  return new Promise(async (resolve, reject) => {
-    await sleep(3000)
-
-    try {
-      await expect(queue.count()).resolves.toBe(6)
-      await expect(latency(["bullmq"], LIFO_OPTIONS)).resolves.toBe(1)
-      resolve(null)
-    } catch (err) {
-      reject(err)
-    }
-  })
+test("enqueued 3 in LIFO mode in the last 3 seconds", async () => {
+  for (let i = 3; i > 0; i--) {
+    await queue.add("bullmq", {}, { timestamp: Date.now() - (1000 * i) })
+  }
+  await expect(queue.count()).resolves.toBe(3)
+  await expect(latency(["bullmq"], LIFO_OPTIONS)).resolves.toBe(1)
 })
 
 test("null on error", async () => {
