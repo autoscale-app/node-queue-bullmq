@@ -11,6 +11,7 @@
   "author": "Michael R. van Rooijen",
   "license": "MIT",
   "files": [
+    "CHANGELOG.md",
     "dist"
   ],
   "main": "dist/index.js",
