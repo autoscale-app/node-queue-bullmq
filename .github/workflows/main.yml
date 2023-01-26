@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [16.x, 17.x, 18.x, 19.x]
+        node: [16, 17, 18, 19]
     services:
       redis:
         image: redis
@@ -23,6 +23,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - run: npm install
-      - run: npm run lint
-      - run: npm run test
+      - name: Run Install
+        run: npm run install
+      - name: Run Lint
+        run: npm run lint
+      - name: Run Test
+        run: npm run test
