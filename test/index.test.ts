@@ -1,4 +1,3 @@
-// import { setup, sleep } from "./helpers"
 import { setup } from "./helpers"
 import { latency } from "../src/index"
 import { Queue } from "bullmq"
